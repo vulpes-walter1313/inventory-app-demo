@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "DEBUG=inventory-app-demo:* node ./bin/www",
-    "dev": "DEBUG=inventory-app-demo:* nodemon ./bin/www"
+    "dev": "DEBUG=inventory-app-demo:* nodemon ./bin/www",
+    "pretty": "prettier . --write"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",

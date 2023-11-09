@@ -25,5 +25,5 @@ module.exports.categories_list = asyncHandler(async (req, res) => {
 
 module.exports.products_list = asyncHandler(async (req, res) => {
   const products = await Instrument.find().exec();
-  res.send("Route not implemented: a full list of all the products");
+  res.render("products", { title: "Products", products: products });
 });

@@ -13,10 +13,21 @@ exports.category_create_post = asyncHandler(async (req, res) => {
 });
 
 // GET /category/:categoryName
-exports.category_products_list = asyncHandler(async (req, res) => {
-  res.send(
-    `Route not implemented: list of products from category: ${req.params.categoryName}`,
-  );
+exports.category_products_list = asyncHandler(async (req, res, next) => {
+  const category = await Category.findOne({
+    slug: req.params.categoryName,
+  }).exec();
+  const products = await Instrument.find({ category: category }).exec();
+  if (category === null) {
+    const err = new Error("Category not found");
+    err.status = 404;
+    return next(err);
+  }
+  res.render("products_list", {
+    title: `${category.name}`,
+    category: category,
+    products: products,
+  });
 });
 
 // GET /category/:categoryName/edit

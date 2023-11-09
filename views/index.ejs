@@ -1,11 +1,36 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <%- include('partials/head') %> 
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <%- include('partials/navbar') %> 
+    <header class="py-10">
+      <h1 class="text-gray-950 text-center font-bold text-5xl"><%= title %></h1>
+      <p class="text-center">Welcome to <%= title %></p>
+    </header>
+    <main class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between px-8 gap-8">
+      <div class="">
+        <h2 class="text-4xl mb-4">Categories</h2>
+        <ul class="list-disc list-inside">
+          <% categories.forEach( category => { %>
+            <li><a href="/category/<%- category.name.toLowerCase() %>" class="underline text-blue-700"><%= category.name  %></a> </li>
+          <% }); %> 
+        </ul>
+      </div>
+      <div>
+        <h2 class="text-4xl mb-4">Products</h2>
+        <ul class="flex flex-col gap-12">
+          <% products.forEach( product => { %>
+            <li>
+              <div class="max-w-[426px] flex flex-col items-center gap-4">
+                <a href="/product/<%= product._id%>" class="text-2xl font-semibold text-center"><%= product.name  %></a>
+                <p class="text-4xl font-bold">$<%= product.price %></p>
+              </div>
+            </li>
+          <% }); %> 
+        </ul>
+      </div>
+    </main>
   </body>
 </html>

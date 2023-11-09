@@ -5,9 +5,13 @@ const Instrument = require("../models/instrument");
 module.exports.index_homepage = asyncHandler(async function (req, res, next) {
   const [categories, products] = await Promise.all([
     Category.find().exec(),
-    await Instrument.find().limit(3).exec(),
+    await Instrument.find().limit(12).exec(),
   ]);
-  res.render("index", { title: "Express" });
+  res.render("index", {
+    title: "Music Store Inventory",
+    categories: categories,
+    products: products,
+  });
 });
 
 module.exports.categories_list = asyncHandler(async (req, res) => {

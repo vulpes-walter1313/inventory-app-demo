@@ -16,7 +16,11 @@ module.exports.index_homepage = asyncHandler(async function (req, res, next) {
 
 module.exports.categories_list = asyncHandler(async (req, res) => {
   const categories = await Category.find().exec();
-  res.send("Route not implemented: list of all categories");
+  // res.send("Route not implemented: list of all categories");
+  res.render("categories", {
+    title: "Categories",
+    categories: categories,
+  });
 });
 
 module.exports.products_list = asyncHandler(async (req, res) => {

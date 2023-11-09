@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const slugify = require("slugify");
 const Schema = mongoose.Schema;
 
 const CategorySchema = new Schema({
@@ -7,7 +8,7 @@ const CategorySchema = new Schema({
 });
 
 CategorySchema.virtual("url").get(function () {
-  return `/catalog/categories/${this._id}`;
+  return `/category/${slugify(this.name, { lower: true })}`;
 });
 
 module.exports = mongoose.model("Category", CategorySchema);

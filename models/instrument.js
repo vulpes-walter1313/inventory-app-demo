@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 const Schema = mongoose.Schema;
 
 const InstrumentSchema = new Schema({
@@ -11,7 +10,7 @@ const InstrumentSchema = new Schema({
 });
 
 InstrumentSchema.virtual("url").get(function () {
-  return `/catalog/item/${this._id}`;
+  return `/product/${this._id}`;
 });
 
 module.exports = mongoose.model("Instrument", InstrumentSchema);

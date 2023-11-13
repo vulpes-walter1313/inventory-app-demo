@@ -56,18 +56,61 @@ exports.category_products_list = asyncHandler(async (req, res, next) => {
 });
 
 // GET /category/:categoryName/edit
-exports.category_edit_get = asyncHandler(async (req, res) => {
-  res.send(
-    `Route not implemented: a prefilled category form to make an edit to ${req.params.categoryName}`,
-  );
+exports.category_edit_get = asyncHandler(async (req, res, next) => {
+  const category = await Category.findOne({
+    slug: req.params.categoryName,
+  }).exec();
+
+  if (category === null) {
+    const err = new Error("Category not found");
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render("category_form", {
+    title: `Edit: ${category.name} Category`,
+    category: category,
+  });
 });
 
 // POST /category/:categoryName/edit
-exports.category_edit_post = asyncHandler(async (req, res) => {
-  res.send(
-    `Route not implemented: post response to edit ${req.params.categoryName}`,
-  );
-});
+exports.category_edit_post = [
+  body("name").trim().notEmpty().isAlpha().isLength({ min: 4 }).escape(),
+  body("slug").trim().isSlug().escape().toLowerCase(),
+  body("description").optional().notEmpty().trim().escape(),
+  asyncHandler(async (req, res) => {
+    const category = await Category.findOne({
+      slug: req.params.categoryName,
+    }).exec();
+    if (category === null) {
+      const err = new Error("Category Not Found");
+      err.status = 404;
+      return next(err);
+    }
+
+    const errResult = validationResult(req);
+    const data = matchedData(req);
+
+    if (errResult.isEmpty()) {
+      // no errors
+      category.name = data.name;
+      category.slug = data.slug;
+      category.description = data.description;
+      await category.save();
+      res.redirect(`/category/${category.slug}`);
+    } else {
+      res.render("category_form", {
+        title: `Edit: ${category.name} Category`,
+        category: {
+          name: data.name,
+          slug: data.slug,
+          description: data.description,
+        },
+        errors: errResult,
+      });
+    }
+  }),
+];
 
 // GET /category/:categoryName/delete
 exports.category_delete_get = asyncHandler(async (req, res) => {

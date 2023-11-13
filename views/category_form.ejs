@@ -27,7 +27,7 @@
             id="name"
             name="name"
             class="border border-gray-950/25 rounded-sm px-4 py-2"
-            value="<%= locals.category === undefined ? "" : `${locals.category.name}` %>"
+            value="<%= locals.category?.name === undefined ? "" : `${locals.category.name}` %>"
             required
             minlength="4"
           />
@@ -39,7 +39,7 @@
             id="slug"
             name="slug"
             class="border border-gray-950/25 rounded-sm px-4 py-2"
-            value="<%= locals.category === undefined ? "" : `${locals.category.slug}` %>"
+            value="<%= locals.category?.slug === undefined ? "" : `${locals.category.slug}` %>"
             required
           />
         </div>
@@ -49,8 +49,8 @@
             id="description"
             name="description"
             class="border border-gray-950/25 rounded-sm px-4 py-2 h-32"
-            value="<%= locals.category === undefined ? "" : `${locals.category.description}` %>"
-            ></textarea>
+            ><%- locals.category?.description === undefined ? "" : `${locals.category.description}` %>
+          </textarea>
         </div>
         <button type="submit" class="bg-gray-950 text-gray-50 px-4 py-2 self-start rounded-md">Submit</button>
       </form>

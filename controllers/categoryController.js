@@ -1,16 +1,41 @@
 const asyncHandler = require("express-async-handler");
 const Category = require("../models/category");
 const Instrument = require("../models/instrument");
+const { body, validationResult, matchedData } = require("express-validator");
 
 // GET /category/create
 exports.category_create_get = (req, res) => {
-  res.send("Route not implemented: a create category form");
+  res.render("category_form", { title: "Create Category" });
 };
 
 // POST /category/create
-exports.category_create_post = asyncHandler(async (req, res) => {
-  res.send("Route not implemented: Post for /category/create");
-});
+exports.category_create_post = [
+  body("name").trim().notEmpty().isAlpha().isLength({ min: 4 }).escape(),
+  body("slug").trim().isSlug().escape().toLowerCase(),
+  body("description").optional().notEmpty().trim().escape(),
+  asyncHandler(async (req, res) => {
+    const errResult = validationResult(req);
+    const data = matchedData(req);
+    const category = new Category({
+      name: data.name,
+      slug: data.slug,
+      description: data.description,
+    });
+
+    if (errResult.isEmpty()) {
+      // No errors present
+      category.save();
+      res.redirect(`/category/${category.slug}`);
+    } else {
+      console.log(errResult);
+      res.render("category_form", {
+        title: "Create Category",
+        errors: errResult,
+        category: category,
+      });
+    }
+  }),
+];
 
 // GET /category/:categoryName
 exports.category_products_list = asyncHandler(async (req, res, next) => {

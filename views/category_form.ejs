@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%- include('partials/head') %> 
+  </head>
+  <body>
+    <%- include('partials/navbar') %> 
+    <header class="py-10">
+      <h1 class="text-gray-950 text-center font-bold text-5xl"><%= title %></h1>
+    </header>
+    <main class="max-w-5xl mx-auto flex flex-col p-8 justify-center justify-items-center">
+      <% if (locals.errors) {%> 
+        <div>
+          <% locals.errors?.errors?.forEach((error) => { %>
+            <div>
+              <p>Error: <%= error?.msg %> </p>
+              <p>Path: <%= error?.path %> </p>
+            </div>     
+          <% }); %> 
+        </div>
+      <% } %> 
+      <form method="POST" class="flex flex-col gap-4 md:w-96 md:mx-auto">
+        <div class="flex flex-col gap-2">
+          <label for="name" class="font-semibold">Name:</label>
+          <input 
+            type="text"
+            id="name"
+            name="name"
+            class="border border-gray-950/25 rounded-sm px-4 py-2"
+            value="<%= locals.category === undefined ? "" : `${locals.category.name}` %>"
+            required
+            minlength="4"
+          />
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="slug" class="font-semibold">Slug:</label>
+          <input 
+            type="text"
+            id="slug"
+            name="slug"
+            class="border border-gray-950/25 rounded-sm px-4 py-2"
+            value="<%= locals.category === undefined ? "" : `${locals.category.slug}` %>"
+            required
+          />
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="description" class="font-semibold">Description:</label>
+          <textarea
+            id="description"
+            name="description"
+            class="border border-gray-950/25 rounded-sm px-4 py-2 h-32"
+            value="<%= locals.category === undefined ? "" : `${locals.category.description}` %>"
+            ></textarea>
+        </div>
+        <button type="submit" class="bg-gray-950 text-gray-50 px-4 py-2 self-start rounded-md">Submit</button>
+      </form>
+    </main>
+  </body>
+</html>

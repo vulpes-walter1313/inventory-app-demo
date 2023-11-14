@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%- include('partials/head') %> 
+  </head>
+  <body>
+    <%- include('partials/navbar') %> 
+    <header class="py-10">
+      <h1 class="text-gray-950 text-center font-bold text-5xl mb-4"><%= title %></h1>
+      <p class="text-center max-w-[32rem] mx-auto"><%- locals.category?.description %></p>
+    </header>
+    <main>
+      <% if(products) { %>
+        <p class="text-center max-w-5xl mx-auto mb-10 text-red-700">You need to delete all the following products before deleting this category.</p>
+        <div class="max-w-5xl mx-auto flex flex-col flex-wrap gap-6 items-center justify-center md:flex-row md:items-start">
+          <% locals.products?.forEach(product => { %>
+            <a href="<%= product.url %>"> 
+              <div class="bg-gray-100 w-80 p-4 rounded-md">
+                <h2 class="text-2xl text-gray-950 text-left font-semibold mb-2"><%- product.name %></h2>
+                <p class="text-gray-600 mb-4"><%- product.inStock %> left in stock.</p>
+                <p class="text-4xl font-bold text-gray-950">$<%= product.price %></p>
+              </div>
+            </a>
+          <% })%>
+        </div>
+      <% } else { %>
+        <div class="max-w-5xl mx-auto text-center">
+          <p>No products here! It's safe to delete this category</p>
+        </div>
+      <% } %>
+      <div class="flex gap-4 mx-auto maw-w-5xl items-center justify-center py-16">
+        <a href="<%- category.url %>" class="block px-3 py-4 border-2 border-gray-900 rounded-lg hover:scale-105">Don&apos;t Delete</a>
+        <form method="post">
+          <input type="hidden" name="categoryid" value="<%= locals.category?._id%>">
+          <button type="submit" class="block px-3 py-4 bg-red-500 text-gray-50 border-2 border-red-500 rounded-lg hover:scale-105">Delete Category</button>
+        </form>
+      </div>
+    </main>
+  </body>
+</html>

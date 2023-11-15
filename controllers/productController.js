@@ -13,10 +13,29 @@ exports.product_create_post = asyncHandler(async (req, res) => {
 });
 
 // GET /product/:productId
-exports.product_detail = asyncHandler(async (req, res) => {
-  res.send(
-    `Route not implemented: product detailed page for product: ${req.params.productId}`,
-  );
+exports.product_detail = asyncHandler(async (req, res, next) => {
+  try {
+    const product = await Instrument.findById(req.params.productId)
+      .populate("category")
+      .exec();
+    if (product) {
+      res.render("product_detail", {
+        title: product.name
+          .slice(0, 30)
+          .concat("", "... | Music Inventory App"),
+        product: product,
+      });
+    } else {
+      const err = new Error("Product Not found");
+      err.status = 404;
+      return next(err);
+    }
+  } catch (e) {
+    console.log(e);
+    const err = new Error(`Product: ${e.value} Not found`);
+    err.status = 404;
+    return next(err);
+  }
 });
 
 // GET /product/:productId/edit

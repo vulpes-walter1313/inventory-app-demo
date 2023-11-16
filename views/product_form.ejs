@@ -27,7 +27,7 @@
             id="name"
             name="name"
             class="border border-gray-950/25 rounded-sm px-4 py-2 bg-gray-50"
-            value="<%= locals.product ? locals.product?.name : "" %>"
+            value="<%- locals.product ? locals.product?.name : "" %>"
             required
             minlength="4"
           />
@@ -49,15 +49,15 @@
             class="px-4 py-2 border border-gray-950/25 rounded-sm bg-gray-50">
             <option value="">--Please select a category</option>
             <% locals.categories?.forEach( category => { %>
-                <% if(selectedCategory && locals.selectedCategory === category.id) { %>
+                <% if(locals.selectedCategory && locals.selectedCategory === category.id) { %>
                   <option
-                    value="<%= category._id %>"
+                    value="<%- category._id %>"
                     selected
-                    ><%= category.name %></option>
+                    ><%- category.name %></option>
                 <% } else { %>
                   <option
-                    value="<%= category._id %>"
-                    ><%= category.name %></option>
+                    value="<%- category._id %>"
+                    ><%- category.name %></option>
                 
                 <% } %>
             <% }) %>
@@ -70,7 +70,7 @@
             id="price"
             name="price"
             class="border border-gray-950/25 rounded-sm px-4 py-2 bg-gray-50"
-            value="<%= locals.product ? locals.product?.price : ""%>"
+            value="<%- locals.product ? locals.product?.price : ""%>"
             required
           />
         </div>
@@ -81,7 +81,7 @@
             id="instock"
             name="instock"
             class="border border-gray-950/25 rounded-sm px-4 py-2 bg-gray-50"
-            value="<%= locals.product ? locals.product?.inStock : ""%>"
+            value="<%- locals.product ? locals.product?.inStock : ""%>"
             required
             min="0"
           />
@@ -93,7 +93,7 @@
             id="slug"
             name="slug"
             class="border border-gray-950/25 rounded-sm px-4 py-2 bg-gray-50"
-            value="<%= locals.product ? locals.product?.slug : ""%>"
+            value="<%- locals.product ? locals.product?.slug : ""%>"
             required
           />
         </div>

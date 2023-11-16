@@ -86,18 +86,83 @@ exports.product_detail = asyncHandler(async (req, res, next) => {
 });
 
 // GET /product/:productSlug/edit
-exports.product_edit_get = asyncHandler(async (req, res) => {
-  res.send(
-    `Route not implemented: prefilled product form to edit: ${req.params.productSlug}`,
-  );
+exports.product_edit_get = asyncHandler(async (req, res, next) => {
+  const [product, categories] = await Promise.all([
+    Instrument.findOne({ slug: req.params.productSlug })
+      .populate("category")
+      .exec(),
+    Category.find({}).exec(),
+  ]);
+
+  if (product === null) {
+    const err = new Error("Product not found");
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render("product_form", {
+    title: `Edit Product: ${product.name}`,
+    product: product,
+    selectedCategory: product.category.id,
+    category: product.category,
+    categories: categories,
+    errors: undefined,
+  });
 });
 
 // POST /product/:productSlug/edit
-exports.product_edit_post = asyncHandler(async (req, res) => {
-  res.send(
-    `Route not implemented: post response to edit product: ${req.params.productSlug}`,
-  );
-});
+exports.product_edit_post = [
+  body("name").trim().isLength({ max: 140 }).escape(),
+  body("description").optional().trim().escape(),
+  body("category").isMongoId().escape(),
+  body("price").trim().isFloat({ gt: 0 }).escape(),
+  body("instock").trim().isInt({ min: 0 }).escape(),
+  body("slug").trim().isSlug().escape(),
+  asyncHandler(async (req, res, next) => {
+    const [product, categories] = await Promise.all([
+      Instrument.findOne({ slug: req.params.productSlug })
+        .populate("category")
+        .exec(),
+      Category.find({}).exec(),
+    ]);
+
+    const errResult = validationResult(req);
+    const data = matchedData(req);
+
+    if (product === null) {
+      const err = new Error("Product not found");
+      err.status = 404;
+      return next(err);
+    }
+
+    if (errResult.isEmpty()) {
+      // no errors
+      // const newCategory = await Category.findById(data.category).exec();
+      product.name = data.name;
+      product.description = data.description;
+      product.category = data.category;
+      product.price = data.price;
+      product.slug = data.slug;
+      await product.save();
+      res.redirect(product.url);
+    } else {
+      // validation errors
+      res.status(500).render("product_form", {
+        title: `Edit Product: ${product.name}`,
+        selectedCategory: product.category.id,
+        product: {
+          name: data.name,
+          description: data.description,
+          price: data.price,
+          inStock: data.instock,
+          slug: data.slug,
+        },
+        categories: categories,
+        errors: errResult,
+      });
+    }
+  }),
+];
 
 // GET /product/:productSlug/delete
 exports.product_delete_get = asyncHandler(async (req, res) => {

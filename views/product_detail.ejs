@@ -6,7 +6,7 @@
   <body>
     <%- include('partials/navbar') %> 
     <header class="py-10 max-w-3xl mx-auto px-8">
-      <h1 class="text-gray-950 text-left text-5xl pb-2"><%= product.name %></h1>
+      <h1 class="text-gray-950 text-left text-5xl pb-2"><%- product.name %></h1>
       <p class="text-xl">Category: <%= product.category.name %></p>
     </header>
     <main class="max-w-3xl mx-auto flex flex-col justify-between px-8 pb-10 gap-8">

@@ -142,6 +142,7 @@ exports.product_edit_post = [
       product.description = data.description;
       product.category = data.category;
       product.price = data.price;
+      product.inStock = data.instock;
       product.slug = data.slug;
       await product.save();
       res.redirect(product.url);
@@ -165,15 +166,38 @@ exports.product_edit_post = [
 ];
 
 // GET /product/:productSlug/delete
-exports.product_delete_get = asyncHandler(async (req, res) => {
-  res.send(
-    `Route not implemented: confirmation page to delete: ${req.params.productSlug}`,
-  );
+exports.product_delete_get = asyncHandler(async (req, res, next) => {
+  const product = await Instrument.findOne({ slug: req.params.productSlug })
+    .populate("category")
+    .exec();
+  if (product === null) {
+    const err = new Error("Product not found");
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render("product_delete", {
+    title: `Delete ${product.name}`,
+    product: product,
+  });
 });
 
 // POST /product/:productSlug/delete
-exports.product_delete_post = asyncHandler(async (req, res) => {
-  res.send(
-    `Route not implemented: post response to delete product: ${req.params.productSlug}`,
-  );
-});
+exports.product_delete_post = [
+  body("productid").trim().isMongoId().escape(),
+  asyncHandler(async (req, res, next) => {
+    const errResult = validationResult(req);
+    const data = matchedData(req);
+
+    if (errResult.isEmpty()) {
+      // no validation errors
+      await Instrument.findByIdAndDelete(data.productid).exec();
+      res.redirect("/products");
+    } else {
+      console.log(errResult);
+      const err = new Error("There was an error in deleting that product");
+      err.status = 500;
+      return next(err);
+    }
+  }),
+];

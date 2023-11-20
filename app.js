@@ -9,6 +9,7 @@ const indexRouter = require("./routes/index");
 const categoryRouter = require("./routes/category");
 const productsRouter = require("./routes/products");
 const compression = require("compression");
+const helmet = require("helmet");
 
 const app = express();
 
@@ -29,6 +30,7 @@ async function main() {
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
+app.use(helmet());
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

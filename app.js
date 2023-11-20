@@ -8,6 +8,7 @@ require("dotenv").config();
 const indexRouter = require("./routes/index");
 const categoryRouter = require("./routes/category");
 const productsRouter = require("./routes/products");
+const compression = require("compression");
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(compression());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);

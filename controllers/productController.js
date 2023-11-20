@@ -37,7 +37,7 @@ exports.product_create_post = [
         inStock: data.instock,
         slug: data.slug,
       });
-      product.save();
+      await product.save();
       res.redirect(product.url);
     } else {
       // errors in validation
@@ -107,6 +107,7 @@ exports.product_edit_get = asyncHandler(async (req, res, next) => {
     category: product.category,
     categories: categories,
     errors: undefined,
+    showPassword: true,
   });
 });
 
@@ -118,6 +119,7 @@ exports.product_edit_post = [
   body("price").trim().isFloat({ gt: 0 }).escape(),
   body("instock").trim().isInt({ min: 0 }).escape(),
   body("slug").trim().isSlug().escape(),
+  body("password").trim().notEmpty(),
   asyncHandler(async (req, res, next) => {
     const [product, categories] = await Promise.all([
       Instrument.findOne({ slug: req.params.productSlug })
@@ -137,15 +139,33 @@ exports.product_edit_post = [
 
     if (errResult.isEmpty()) {
       // no errors
-      // const newCategory = await Category.findById(data.category).exec();
-      product.name = data.name;
-      product.description = data.description;
-      product.category = data.category;
-      product.price = data.price;
-      product.inStock = data.instock;
-      product.slug = data.slug;
-      await product.save();
-      res.redirect(product.url);
+      if (data.password === process.env.EDIT_PASSWORD) {
+        product.name = data.name;
+        product.description = data.description;
+        product.category = data.category;
+        product.price = data.price;
+        product.inStock = data.instock;
+        product.slug = data.slug;
+        await product.save();
+        res.redirect(product.url);
+      } else {
+        res.status(400).render("product_form", {
+          title: `Edit Product: ${product.name}`,
+          product: {
+            name: data.name,
+            description: data.description,
+            price: data.price,
+            inStock: data.instock,
+            slug: data.slug,
+          },
+          selectedCategory: product.category.id,
+          category: product.category,
+          categories: categories,
+          errors: undefined,
+          showPassword: true,
+          passwordIncorrect: true,
+        });
+      }
     } else {
       // validation errors
       res.status(500).render("product_form", {
@@ -185,14 +205,26 @@ exports.product_delete_get = asyncHandler(async (req, res, next) => {
 // POST /product/:productSlug/delete
 exports.product_delete_post = [
   body("productid").trim().isMongoId().escape(),
+  body("password").trim().notEmpty(),
   asyncHandler(async (req, res, next) => {
     const errResult = validationResult(req);
     const data = matchedData(req);
 
     if (errResult.isEmpty()) {
       // no validation errors
-      await Instrument.findByIdAndDelete(data.productid).exec();
-      res.redirect("/products");
+      if (data.password === process.env.EDIT_PASSWORD) {
+        await Instrument.findByIdAndDelete(data.productid).exec();
+        res.redirect("/products");
+      } else {
+        const product = await Instrument.findById(data.productid)
+          .populate("category")
+          .exec();
+        res.render("product_delete", {
+          title: `Delete: ${product.name}`,
+          product: product,
+          passwordIncorrect: true,
+        });
+      }
     } else {
       console.log(errResult);
       const err = new Error("There was an error in deleting that product");

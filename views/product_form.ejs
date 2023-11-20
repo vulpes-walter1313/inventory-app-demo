@@ -97,6 +97,21 @@
             required
           />
         </div>
+        <% if(locals.showPassword) { %>
+          <div class="flex flex-col gap-2">
+            <label for="password" class="font-semibold">Admin Password:</label>
+            <% if (locals.passwordIncorrect) { %>
+              <p class="text-red-700">Password is incorrect!</p>
+            <% }%>
+            <input type="password"
+              name="password"
+              id="password"
+              required
+              minlength="4"
+              maxlength="40"
+              class="border border-gray-950/25 px-4 py-2 rounded-sm">
+          </div>
+        <% }%>
         <button type="submit" class="bg-gray-950 text-gray-50 px-4 py-2 self-start rounded-md">Submit</button>
       </form>
     </main>

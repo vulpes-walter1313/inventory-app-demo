@@ -17,8 +17,21 @@
       </div>
       <div class="flex flex-col gap-4 justify-center items-center">
         <p class="text-3xl text-gray-950">Are you sure you want to delete this product?</p>
-        <form method="POST">
+        <form method="POST" class="flex flex-col gap-5 justify-center items-center">
           <input type="hidden" name="productid" value="<%- locals.product.id %>">
+          <div class="flex flex-col gap-2">
+            <label for="password" class="font-semibold">Admin Password:</label>
+            <% if (locals.passwordIncorrect) { %>
+              <p class="text-red-800">Password is incorrect!</p>
+            <% }%>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              minlength="4"
+              maxlength="40"
+              class="border border-gray-950/25 text-base py-2 px-4">
+          </div>
           <button type="submit" class="block px-3 py-4 border-2 border-red-500 bg-red-500 text-gray-50 rounded-lg hover:scale-105">Delete Product</button>
         </form>
       </div>

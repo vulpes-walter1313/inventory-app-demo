@@ -19,7 +19,7 @@ mongoose.set("strictQuery", false);
 
 const mongoDB =
   process.env.NODE_ENV === "production"
-    ? process.end.MONGODB_URI
+    ? process.env.MONGODB_URI
     : process.env.MONGODB_DEV_URI;
 
 main().catch((err) => console.log(err));

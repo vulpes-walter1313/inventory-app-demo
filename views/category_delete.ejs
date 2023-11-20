@@ -28,12 +28,29 @@
           <p>No products here! It's safe to delete this category</p>
         </div>
       <% } %>
-      <div class="flex gap-4 mx-auto maw-w-5xl items-center justify-center py-16">
+      <div class="flex flex-col gap-4 mx-auto maw-w-5xl items-center justify-center py-16">
         <a href="<%- category.url %>" class="block px-3 py-4 border-2 border-gray-900 rounded-lg hover:scale-105">Don&apos;t Delete</a>
-        <form method="post">
-          <input type="hidden" name="categoryid" value="<%= locals.category?._id%>">
-          <button type="submit" class="block px-3 py-4 bg-red-500 text-gray-50 border-2 border-red-500 rounded-lg hover:scale-105">Delete Category</button>
-        </form>
+        <% if (locals.showPassword) { %>
+          <form method="post" class="flex flex-col gap-4 items-start">
+            <input type="hidden" name="categoryid" value="<%= locals.category?._id%>">
+            <div class="flex flex-col gap-2">
+              <label for="password" class="font-semibold">Admin Password:</label>
+              <% if (locals.passwordIncorrect) { %>
+                <p class="text-red-700">Password is incorrect!</p>
+              <% }%> 
+              <input type="password"
+                name="password" 
+                id="password"
+                required
+                minlength="4"
+                maxlength="40"
+                class="px-4 py-2 border border-gray-950/25">
+            </div>
+            <button
+              type="submit"
+              class="block px-3 py-4 bg-red-500 text-gray-50 border-2 border-red-500 rounded-lg hover:scale-105">Delete Category</button>
+          </form>
+        <% }%>
       </div>
     </main>
   </body>

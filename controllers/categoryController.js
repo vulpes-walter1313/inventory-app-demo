@@ -70,6 +70,7 @@ exports.category_edit_get = asyncHandler(async (req, res, next) => {
   res.render("category_form", {
     title: `Edit: ${category.name} Category`,
     category: category,
+    showPassword: true,
   });
 });
 
@@ -78,6 +79,7 @@ exports.category_edit_post = [
   body("name").trim().notEmpty().isAlpha().isLength({ min: 4 }).escape(),
   body("slug").trim().isSlug().escape().toLowerCase(),
   body("description").optional().notEmpty().trim().escape(),
+  body("password").trim().notEmpty(),
   asyncHandler(async (req, res) => {
     const category = await Category.findOne({
       slug: req.params.categoryName,
@@ -93,11 +95,24 @@ exports.category_edit_post = [
 
     if (errResult.isEmpty()) {
       // no errors
-      category.name = data.name;
-      category.slug = data.slug;
-      category.description = data.description;
-      await category.save();
-      res.redirect(`/category/${category.slug}`);
+      if (data.password === process.env.EDIT_PASSWORD) {
+        category.name = data.name;
+        category.slug = data.slug;
+        category.description = data.description;
+        await category.save();
+        res.redirect(`/category/${category.slug}`);
+      } else {
+        res.status(400).render("category_form", {
+          title: `Edit: ${category.name} Category`,
+          category: {
+            name: data.name,
+            description: data.description,
+            slug: data.slug,
+          },
+          showPassword: true,
+          passwordIncorrect: true,
+        });
+      }
     } else {
       res.render("category_form", {
         title: `Edit: ${category.name} Category`,
@@ -133,6 +148,7 @@ exports.category_delete_get = asyncHandler(async (req, res, next) => {
       title: `Delete ${category.name}?`,
       category: category,
       products: undefined,
+      showPassword: true,
     });
   }
 });
@@ -140,6 +156,7 @@ exports.category_delete_get = asyncHandler(async (req, res, next) => {
 // POST /category/:categoryName/delete
 exports.category_delete_post = [
   body("categoryid").trim().isMongoId(),
+  body("password").trim().notEmpty(),
   asyncHandler(async (req, res, next) => {
     const errResult = validationResult(req);
     const data = matchedData(req);
@@ -162,8 +179,20 @@ exports.category_delete_post = [
         });
       } else {
         // the category exists but there are not products under it.
-        await Category.findByIdAndDelete(data.categoryid).exec();
-        res.redirect("/categories");
+        if (data.password === process.env.EDIT_PASSWORD) {
+          // password is correct
+          await Category.findByIdAndDelete(data.categoryid).exec();
+          res.redirect("/categories");
+        } else {
+          // password is incorrect
+          res.status(400).render("category_delete", {
+            title: `Delete: ${category.name}`,
+            category: category,
+            products: undefined,
+            showPassword: true,
+            passwordIncorrect: true,
+          });
+        }
       }
     } else {
       // errors in validation

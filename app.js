@@ -38,6 +38,15 @@ app.use(cookieParser());
 app.use(compression());
 app.use(express.static(path.join(__dirname, "public")));
 
+if (process.env.NODE_ENV === "production") {
+  const RateLimit = require("express-rate-limit");
+  const limiter = RateLimit({
+    windowMs: 1 * 60 * 1000, // 1 minute
+    max: 50,
+  });
+  app.use(limiter);
+}
+
 app.use("/", indexRouter);
 app.use("/category", categoryRouter);
 app.use("/product", productsRouter);

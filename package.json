@@ -3,35 +3,45 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "NODE_ENV=production DEBUG=inventory-app-demo:* node ./bin/www",
-    "dev": "DEBUG=inventory-app-demo:* concurrently \"nodemon ./bin/www\" \"npm run tailwind:css\"",
+    "start": "NODE_ENV=production DEBUG=inventory-app-demo:* node ./dist/app.js",
+    "dev": "DEBUG=inventory-app-demo:* concurrently \"node --watch ./dist/app.js\" \"npm run tailwind:css\" \"npx tsc -w\"",
     "pretty": "prettier . --write",
-    "tailwind:css": "postcss -w public/stylesheets/tailwind.css -o public/stylesheets/style.css"
+    "tailwind:css": "postcss -w public/stylesheets/tailwind.css -o public/stylesheets/style.css",
+    "build": "tsc",
+    "db:populate": "node -r esbuild-register ./db/populate.ts",
+    "cpp": "rsync -avhP --delete ./public/ ./dist/public && rsync -avhP --delete ./views/ ./dist/views"
   },
   "dependencies": {
     "compression": "^1.7.4",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "dotenv": "^16.3.1",
-    "ejs": "~2.6.1",
-    "express": "~4.16.1",
+    "ejs": "^3.1.10",
+    "express": "^4.16.1",
     "express-async-handler": "^1.2.0",
     "express-rate-limit": "^7.1.4",
-    "express-validator": "^7.0.1",
+    "express-validator": "^7.2.0",
     "helmet": "^7.1.0",
     "http-errors": "~1.6.3",
     "mongoose": "^7.6.3",
-    "morgan": "~1.9.1",
+    "morgan": "~1.10.0",
+    "pg": "^8.12.0",
     "slugify": "^1.6.6"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.16",
+    "@types/compression": "^1.7.5",
+    "@types/cookie-parser": "^1.4.7",
+    "@types/express": "^4.17.21",
+    "@types/morgan": "^1.9.9",
+    "@types/pg": "^8.11.6",
+    "autoprefixer": "^10.4.20",
     "concurrently": "^8.2.2",
     "nodemon": "^3.0.1",
-    "postcss": "^8.4.31",
+    "postcss": "^8.4.41",
     "postcss-cli": "^10.1.0",
-    "prettier": "^3.0.3",
-    "prettier-plugin-tailwindcss": "^0.5.7",
-    "tailwindcss": "^3.3.5"
+    "prettier": "^3.3.3",
+    "prettier-plugin-tailwindcss": "^0.5.14",
+    "tailwindcss": "^3.4.10",
+    "typescript": "^5.5.4"
   }
 }

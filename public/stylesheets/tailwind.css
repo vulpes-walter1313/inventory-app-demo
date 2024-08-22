@@ -1,3 +1,65 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+h1, h2, h3, h4, h5,h6 {
+  line-height: 115%;
+  font-weight: 800;
+}
+h1 {
+  font-size: 2.25rem;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+h3 {
+  font-size: 1.8125rem;
+}
+
+h4 {
+  font-size: 1.625rem;
+}
+
+h5 {
+  font-size: 1.4375rem;
+}
+
+h6 {
+  font-size: 1.25rem;
+}
+
+p {
+  font-size: 1.125rem;
+}
+
+@media screen and (min-width: 65rem) {
+  h1 {
+    font-size: 3.75rem;
+  }
+
+  h2 {
+    font-size: 3.125rem;
+  }
+
+  h3 {
+    font-size: 2.5625rem;
+  }
+
+  h4 {
+    font-size: 2.1875rem;
+  }
+
+  h5 {
+    font-size: 1.8125rem;
+  }
+
+  h6 {
+    font-size: 1.5rem;
+  }
+
+  p {
+    font-size: 1.25rem;
+  }
+}

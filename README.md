@@ -4,6 +4,14 @@ This is my attempt at [TheOdinProject's Inventory App Project](https://www.theod
 
 ## Models
 
+### DB Connection
+
+This app uses a postgres database so the ENV variable `DB_URL` should be a postgres connection string like this
+
+```Text
+postgresql://<username>:<password>@<domain or localhost>:<port or 5432 default>/<database name>
+```
+
 ### Instruments
 
 ```sql
@@ -19,14 +27,16 @@ CREATE TABLE IF NOT EXISTS instruments (
   CONSTRAINT fk_category
     FOREIGN KEY(category_id)
     REFERENCES categories(id)
+    ON DELETE CASCADE
 );
 ```
+
 ### Categories
 
 ```SQL
 CREATE TABLE IF NOT EXISTS categories (
   id INT GENERATED ALWAYS AS IDENTITY,
-  cat_name VARCHAR(20) NOT NULL,
+  name VARCHAR(20) NOT NULL,
   slug VARCHAR(100) NOT NULL UNIQUE,
   description VARCHAR(256),
   PRIMARY KEY(id)
@@ -56,6 +66,7 @@ this page will have a form to create a new category. The form will take in the f
 ### POST `/category`
 
 This endpoint will take a form body with:
+
 - name
 - slug
 - description
@@ -76,7 +87,7 @@ This endpoint will update the category in question. Validation will ensure data 
 
 ### GET `/category/:categorySlug/delete`
 
-This page will show a delete confirmation page. If the category to be deleted still has products assigned to the category, then some of those products will appear and a message saying that those products must be either deleted or recategorized in order to delete the category. 
+This page will show a delete confirmation page. If the category to be deleted still has products assigned to the category, then some of those products will appear and a message saying that those products must be either deleted or recategorized in order to delete the category.
 
 If the category doesn't have products then a delete button will show up that triggers the actual deletion of the category.
 
@@ -113,7 +124,7 @@ This page will show the same form as GET `/product/create` but with the fields p
 
 ### PUT `/product/:productSlug`
 
-This endpoint will validate the FormData to ensure it's consistent and if valid, the product data will be updated and will be redirected to that products page GET `/product/:productSlug`. If validation fails then the GET `/product/:productSlug/edit` page will be rerendered with the validation errors. 
+This endpoint will validate the FormData to ensure it's consistent and if valid, the product data will be updated and will be redirected to that products page GET `/product/:productSlug`. If validation fails then the GET `/product/:productSlug/edit` page will be rerendered with the validation errors.
 
 ### GET `/product/:productSlug/delete`
 

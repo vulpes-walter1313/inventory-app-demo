@@ -1,6 +1,6 @@
-const express = require("express");
+import express from "express";
+import * as productController from "../controllers/productController";
 const router = express.Router();
-const productController = require("../controllers/productController");
 
 // All routes here are prepended with "/product"
 router.get("/create", productController.product_create_get);
@@ -17,4 +17,4 @@ router.get("/:productSlug/delete", productController.product_delete_get);
 
 router.post("/:productSlug/delete", productController.product_delete_post);
 
-module.exports = router;
+export default router;

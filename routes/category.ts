@@ -1,9 +1,6 @@
-const Category = require("../models/category");
-const Instrument = require("../models/instrument");
-const asyncHandler = require("express-async-handler");
-const express = require("express");
+import express from "express";
+import * as categoryController from "../controllers/categoryController";
 const router = express.Router();
-const categoryController = require("../controllers/categoryController");
 
 // All routes here are prepended with "/category"
 router.get("/create", categoryController.category_create_get);
@@ -20,4 +17,4 @@ router.get("/:categoryName/delete", categoryController.category_delete_get);
 
 router.post("/:categoryName/delete", categoryController.category_delete_post);
 
-module.exports = router;
+export default router;

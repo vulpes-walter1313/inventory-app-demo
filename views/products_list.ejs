@@ -6,24 +6,27 @@
   <body>
     <%- include('partials/navbar') %> 
     <header class="py-10">
-      <h1 class="text-gray-950 text-center font-bold text-5xl mb-4"><%= title %></h1>
+      <h1 class="text-zinc-950 text-center mb-4"><%= title %></h1>
       <p class="text-center max-w-[32rem] mx-auto"><%- category.description %></p>
     </header>
     <main>
-      <div class="max-w-5xl mx-auto flex flex-col flex-wrap gap-6 items-center justify-center md:flex-row md:items-start">
+      <div class="max-w-5xl mx-auto flex flex-col flex-wrap gap-6 items-center justify-center md:flex-row md:items-stretch md:justify-stretch">
         <% products.forEach(product => { %>
-          <a href="<%= product.url %>"> 
-            <div class="bg-gray-100 w-80 p-4 rounded-md">
-              <h2 class="text-2xl text-gray-950 text-left font-semibold mb-2"><%- product.name %></h2>
-              <p class="text-gray-600 mb-4"><%- product.inStock %> left in stock.</p>
-              <p class="text-4xl font-bold text-gray-950">$<%= product.price %></p>
+          <a href="/product/<%= product.slug %>" class="bg-white border border-zinc-950/15 w-80 p-4 rounded-md flex flex-col gap-4 justify-between"> 
+            <div class="flex flex-col gap-2 justify-between">
+              <h2 class="text-mobh6 lg:text-dekh6 text-zinc-950 text-left mb-2"><%- product.name %></h2>
+              <div>
+                <p class="text-zinc-600"><%- product.in_stock %> left in stock.</p>
+                <p class="text-zinc-600">ID: <%= product.id %></p>
+              </div>
             </div>
+            <p class="text-zinc-950">$<%= product.price %></p>
           </a>
         <% })%>
       </div>
-      <div class="flex gap-4 mx-auto maw-w-5xl items-center justify-center py-16">
-        <a href="<%- category.url %>/edit" class="block px-3 py-4 border-2 border-gray-900 rounded-lg hover:scale-105">Edit Category</a>
-        <a href="<%- category.url %>/delete" class="block px-3 py-4 bg-red-500 text-gray-50 rounded-lg hover:scale-105">Delete Category</a>
+      <div class="flex gap-8 mx-auto maw-w-5xl items-center justify-center py-16">
+        <a href="/category/<%- category.slug %>/edit" class="block px-6 py-2 bg-emerald-700 text-white font-semibold text-xl rounded-lg hover:scale-105">Edit Category</a>
+        <a href="/category/<%- category.slug %>/delete" class="block px-0 py-2 text-red-700 text-xl font-semibold hover:scale-105">Delete Category</a>
       </div>
     </main>
   </body>

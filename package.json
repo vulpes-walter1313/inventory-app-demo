@@ -2,6 +2,12 @@
   "name": "inventory-app-demo",
   "version": "0.0.0",
   "private": true,
+  "watch": {
+    "cpp": {
+      "patterns": ["public", "views"],
+      "extensions": "ejs,css"
+    }
+  },
   "scripts": {
     "start": "NODE_ENV=production DEBUG=inventory-app-demo:* node ./dist/app.js",
     "dev": "DEBUG=inventory-app-demo:* concurrently \"node --watch ./dist/app.js\" \"npm run tailwind:css\" \"npx tsc -w\"",
@@ -9,7 +15,8 @@
     "tailwind:css": "postcss -w public/stylesheets/tailwind.css -o public/stylesheets/style.css",
     "build": "tsc",
     "db:populate": "node -r esbuild-register ./db/populate.ts",
-    "cpp": "rsync -avhP --delete ./public/ ./dist/public && rsync -avhP --delete ./views/ ./dist/views"
+    "cpp": "rsync -avhP --delete ./public/ ./dist/public && rsync -avhP --delete ./views/ ./dist/views",
+    "watch-public": "npm-watch cpp"
   },
   "dependencies": {
     "compression": "^1.7.4",
@@ -37,6 +44,7 @@
     "autoprefixer": "^10.4.20",
     "concurrently": "^8.2.2",
     "nodemon": "^3.0.1",
+    "npm-watch": "^0.13.0",
     "postcss": "^8.4.41",
     "postcss-cli": "^10.1.0",
     "prettier": "^3.3.3",

@@ -2,6 +2,9 @@
 module.exports = {
   content: ["./views/**/*.ejs"],
   theme: {
+    fontFamily: {
+      'sans': ['"Open Sans"', 'Helvetica', 'Arial', 'sans-serif']
+    },
     extend: {
       fontSize: {
         deskh1: ["3.75rem", { lineHeight: "115%", fontWeight: "800" }],

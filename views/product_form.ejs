@@ -26,7 +26,7 @@
             type="text"
             id="name"
             name="name"
-            class="border border-gray-950/25 rounded-sm px-4 py-2 bg-gray-50"
+            class="border border-gray-950/25 rounded-md px-4 py-2 bg-gray-50"
             value="<%- locals.product ? locals.product?.name : "" %>"
             required
             minlength="4"
@@ -37,7 +37,7 @@
           <textarea
             id="description"
             name="description"
-            class="border border-gray-950/25 rounded-sm px-4 py-2 h-32 bg-gray-50"
+            class="border border-gray-950/25 rounded-md px-4 py-2 h-32 bg-gray-50"
             ><%- locals.product ? locals.product?.description : "" %></textarea>
         </div>
         <div class="flex flex-col gap-2">
@@ -46,7 +46,7 @@
             name="category"
             id="category"
             required
-            class="px-4 py-2 border border-gray-950/25 rounded-sm bg-gray-50">
+            class="px-4 py-2 border border-gray-950/25 rounded-md bg-gray-50">
             <option value="">--Please select a category</option>
             <% locals.categories?.forEach( category => { %>
                 <% if(locals.selectedCategory && locals.selectedCategory === category.id) { %>
@@ -69,7 +69,7 @@
             type="text"
             id="price"
             name="price"
-            class="border border-gray-950/25 rounded-sm px-4 py-2 bg-gray-50"
+            class="border border-gray-950/25 rounded-md px-4 py-2 bg-gray-50"
             value="<%- locals.product ? locals.product?.price : ""%>"
             required
           />
@@ -80,8 +80,8 @@
             type="number"
             id="instock"
             name="instock"
-            class="border border-gray-950/25 rounded-sm px-4 py-2 bg-gray-50"
-            value="<%- locals.product ? locals.product?.inStock : ""%>"
+            class="border border-gray-950/25 rounded-md px-4 py-2 bg-gray-50"
+            value="<%- locals.product ? locals.product?.in_stock : ""%>"
             required
             min="0"
           />
@@ -92,7 +92,7 @@
             type="text"
             id="slug"
             name="slug"
-            class="border border-gray-950/25 rounded-sm px-4 py-2 bg-gray-50"
+            class="border border-gray-950/25 rounded-md px-4 py-2 bg-gray-50"
             value="<%- locals.product ? locals.product?.slug : ""%>"
             required
           />
@@ -109,10 +109,10 @@
               required
               minlength="4"
               maxlength="40"
-              class="border border-gray-950/25 px-4 py-2 rounded-sm">
+              class="border border-gray-950/25 px-4 py-2 rounded-md">
           </div>
         <% }%>
-        <button type="submit" class="bg-gray-950 text-gray-50 px-4 py-2 self-start rounded-md">Submit</button>
+        <button type="submit" class="px-6 py-2 bg-emerald-700 text-white font-semibold text-xl rounded-lg hover:scale-105">Submit</button>
       </form>
     </main>
   </body>

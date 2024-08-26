@@ -6,22 +6,25 @@
   <body>
     <%- include('partials/navbar') %> 
     <header class="py-10">
-      <h1 class="text-gray-950 text-center font-bold text-5xl"><%= title %></h1>
+      <h1 class="text-zinc-950 text-center"><%= title %></h1>
     </header>
     <main>
-      <div class="max-w-5xl mx-auto flex flex-col flex-wrap gap-6 items-center justify-center md:flex-row md:items-start">
+      <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
         <% products.forEach(product => { %>
-          <a href="<%= product.url %>"> 
-            <div class="bg-gray-100 w-80 p-4 rounded-md">
-              <h2 class="text-2xl text-gray-950 text-left font-semibold mb-2"><%- product.name %></h2>
-              <p class="text-gray-600 mb-4"><%- product.inStock %> left in stock.</p>
-              <p class="text-4xl font-bold text-gray-950">$<%= product.price %></p>
+          <a href="/product/<%= product.slug %>" class="bg-white border border-zinc-950/15 shadow-md w-80 p-4 rounded-md flex flex-col gap-4 justify-between h-full"> 
+            <div class="flex flex-col gap-2 justify-between">
+              <h2 class="text-mobh6 lg:text-dekh6 text-zinc-950 text-left mb-2"><%- product.name %></h2>
+              <div>
+                <p class="text-zinc-600"><%- product.in_stock %> left in stock.</p>
+                <p class="text-zinc-600">ID: <%= product.id %></p>
+              </div>
             </div>
+            <p class="text-zinc-950">$<%= product.price %></p>
           </a>
         <% })%>
       </div>
       <div class="max-w-5xl mx-auto flex justify-center pt-10">
-        <a href="/product/create" class="block px-3 py-4 border-2 border-gray-900 rounded-lg hover:scale-105">Create Product</a>
+        <a href="/product/create" class="block px-6 py-2 bg-emerald-700 text-white font-semibold text-xl rounded-lg hover:scale-105">Create Product</a>
       </div>
     </main>
   </body>

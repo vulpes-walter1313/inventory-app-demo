@@ -19,10 +19,10 @@ CREATE TABLE IF NOT EXISTS instruments (
   id INT GENERATED ALWAYS AS IDENTITY,
   name VARCHAR(256) NOT NULL,
   description VARCHAR(2040),
-  category_id INT NOT NULL
+  category_id INT NOT NULL,
   price DEC(10,2) NOT NULL,
   in_stock INT,
-  slug VARCHAR(100) NOT NULL UNIQUE
+  slug VARCHAR(200) NOT NULL UNIQUE,
   PRIMARY KEY(id),
   CONSTRAINT fk_category
     FOREIGN KEY(category_id)
@@ -36,8 +36,8 @@ CREATE TABLE IF NOT EXISTS instruments (
 ```SQL
 CREATE TABLE IF NOT EXISTS categories (
   id INT GENERATED ALWAYS AS IDENTITY,
-  name VARCHAR(20) NOT NULL,
-  slug VARCHAR(100) NOT NULL UNIQUE,
+  name VARCHAR(40) NOT NULL,
+  slug VARCHAR(200) NOT NULL UNIQUE,
   description VARCHAR(256),
   PRIMARY KEY(id)
 );
@@ -81,7 +81,7 @@ This will be a page that shows all the products in that category.
 
 this page will be the same form as in GET `/category/create` but prefilled with data from the category in question.
 
-### PUT `/category/:categorySlug`
+### POST `/category/:categorySlug/edit`
 
 This endpoint will update the category in question. Validation will ensure data is consistent. If validation fails, the GET `/category/:categorySlug/edit` page will be rerendered with validation errors.
 
@@ -91,7 +91,7 @@ This page will show a delete confirmation page. If the category to be deleted st
 
 If the category doesn't have products then a delete button will show up that triggers the actual deletion of the category.
 
-### DELETE `/category/:categorySlug`
+### POST `/category/:categorySlug/delete`
 
 This endpoint will first verify that there are no products in the category. If there are products in that category then DELETE action is rejected. If category has no products then DELETE action will be done.
 
@@ -110,7 +110,7 @@ This page will have a form to create a new product. It will contain the followin
 - in_stock (number input)
 - slug
 
-### POST `/product`
+### POST `/product/create`
 
 This endpoint will verify all fields from GET `/product/create`. If validation is valid, a new product will be created. If validation fails, the GET `/product/create` page will be rerendered with the validation errors.
 
@@ -122,7 +122,7 @@ This page will show all information of the product in question.
 
 This page will show the same form as GET `/product/create` but with the fields prefilled with the data from the product in question. Submission will be to PUT `/product/:productSlug`.
 
-### PUT `/product/:productSlug`
+### POST `/product/:productSlug/edit`
 
 This endpoint will validate the FormData to ensure it's consistent and if valid, the product data will be updated and will be redirected to that products page GET `/product/:productSlug`. If validation fails then the GET `/product/:productSlug/edit` page will be rerendered with the validation errors.
 
@@ -130,6 +130,6 @@ This endpoint will validate the FormData to ensure it's consistent and if valid,
 
 This page will show the product in question and ask for confirmation if you want to delete the product.
 
-### DELETE `/product/:productSlug`
+### POST `/product/:productSlug/delete`
 
 This endpoint will delete the product and redirect to GET `/`

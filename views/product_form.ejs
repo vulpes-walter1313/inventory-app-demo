@@ -51,12 +51,12 @@
             <% locals.categories?.forEach( category => { %>
                 <% if(locals.selectedCategory && locals.selectedCategory === category.id) { %>
                   <option
-                    value="<%- category._id %>"
+                    value="<%- category.id %>"
                     selected
                     ><%- category.name %></option>
                 <% } else { %>
                   <option
-                    value="<%- category._id %>"
+                    value="<%- category.id %>"
                     ><%- category.name %></option>
                 
                 <% } %>

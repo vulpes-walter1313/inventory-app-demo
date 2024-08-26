@@ -33,16 +33,7 @@ export const product_create_post = [
 
     if (errResult.isEmpty()) {
       // no errors
-      // const category = await Category.findById(data.category).exec();
-      // const product = new Instrument({
-      //   name: data.name,
-      //   description: data.description,
-      //   category: category,
-      //   price: data.price,
-      //   inStock: data.instock,
-      //   slug: data.slug,
-      // });
-      // await product.save();
+
       const name = String(data.name) || "";
       const description = String(data.description) || "";
       const category_id = parseInt(data.category);
@@ -87,9 +78,7 @@ export const product_create_post = [
 export const product_detail = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      // const product = await Instrument.findOne({ slug: req.params.productSlug })
-      //   .populate("category")
-      //   .exec();
+
       const product = await Products.getProductBySlug(req.params.productSlug);
       if (product) {
         res.render("product_detail", {
@@ -170,7 +159,7 @@ export const product_edit_post = [
           { name, description, category_id, price, in_stock, slug },
           req.params.productSlug,
         );
-        res.redirect(`/products/${slug}`);
+        res.redirect(`/product/${slug}`);
       } else {
         res.status(400).render("product_form", {
           title: `Edit Product: ${product.name}`,
@@ -234,14 +223,12 @@ export const product_delete_post = [
     if (errResult.isEmpty()) {
       // no validation errors
       if (data.password === process.env.EDIT_PASSWORD) {
-        // await Instrument.findByIdAndDelete(data.productid).exec();
+
         const productid = parseInt(data.productid);
         await Products.deleteProductById(productid);
         res.redirect("/products");
       } else {
-        // const product = await Instrument.findById(data.productid)
-        //   .populate("category")
-        //   .exec();
+
         const productid = parseInt(data.productid);
         const product = await Products.getProductById(productid);
         res.render("product_delete", {

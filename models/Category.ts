@@ -7,7 +7,7 @@ type Category = {
 };
 type CategoryList = Category[];
 async function getCategories() {
-  const { rows } = await db.query("SELECT * FROM categories");
+  const { rows } = await db.query("SELECT * FROM categories ORDER BY name");
   return rows as CategoryList;
 }
 async function getCategoryBySlug(slug: string) {

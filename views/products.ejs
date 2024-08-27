@@ -15,6 +15,7 @@
             <div class="flex flex-col gap-2 justify-between">
               <h2 class="text-mobh6 lg:text-dekh6 text-zinc-950 text-left mb-2"><%- product.name %></h2>
               <div>
+                <p class="text-zinc-600">Category: <%= product.category_name %></p>
                 <p class="text-zinc-600">ID: <%= product.id %></p>
                 <p class="text-zinc-600"><%- product.in_stock %> left in stock.</p>
               </div>
@@ -22,6 +23,11 @@
             <p class="text-zinc-950">$<%= product.price %></p>
           </a>
         <% })%>
+      </div>
+      <div class="flex gap-2 my-8 justify-center">
+       <% totalPages.forEach(num => { %>
+        <a href="/products?limit=<%= limit %>&page=<%= num%>" class="border border-zinc-950/15 p-2 rounded-md bg-white text-zinc-800 shadow-md<%- num === currentPage ? " font-bold" : "" %> " ><%= num %></a> 
+       <% }) %> 
       </div>
       <div class="max-w-5xl mx-auto flex justify-center pt-10">
         <a href="/product/create" class="block px-6 py-2 bg-emerald-700 text-white font-semibold text-xl rounded-lg hover:scale-105">Create Product</a>

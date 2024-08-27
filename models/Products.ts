@@ -16,9 +16,16 @@ type CreateProductProps = Omit<
   Product,
   "category_name" | "category_slug" | "id"
 >;
-
-async function getProducts() {
-  const { rows } = await db.query(`SELECT
+type GetProductsPayload = {
+  limit: number;
+  page: number;
+  categoryId?: number;
+};
+async function getProducts({ limit, page, categoryId }: GetProductsPayload) {
+  if (categoryId) {
+    const offset = (page - 1) * limit;
+    const { rows } = await db.query(
+      `SELECT
     i.id AS id,
     i.name AS name,
     i.description AS description,
@@ -31,8 +38,53 @@ async function getProducts() {
     FROM instruments i
     JOIN categories c
     ON i.category_id = c.id
-`);
-  return rows as ProductList;
+    WHERE category_id = $1
+    ORDER BY i.name
+    LIMIT $2 OFFSET $3
+`,
+      [categoryId, limit, offset],
+    );
+    return rows as ProductList;
+  } else {
+    const offset = (page - 1) * limit;
+    const { rows } = await db.query(
+      `SELECT
+    i.id AS id,
+    i.name AS name,
+    i.description AS description,
+    c.id AS category_id,
+    c.name AS category_name,
+    c.slug AS category_slug,
+    price,
+    in_stock,
+    i.slug AS slug
+    FROM instruments i
+    JOIN categories c
+    ON i.category_id = c.id
+    ORDER BY i.name
+    LIMIT $1 OFFSET $2
+`,
+      [limit, offset],
+    );
+    return rows as ProductList;
+  }
+}
+
+// Gets total count of how many products there are
+async function getCount(categoryId?: number) {
+  if (categoryId) {
+    const { rows } = await db.query(
+      `SELECT COUNT(id) AS count
+      FROM instruments
+      WHERE category_id = $1`,
+      [categoryId],
+    );
+    return rows[0].count as number;
+  } else {
+    const { rows } = await db.query(`SELECT COUNT(id) AS count
+      FROM instruments`);
+    return rows[0].count as number;
+  }
 }
 
 async function getProductsByCategoryId(categoryId: number) {
@@ -173,6 +225,7 @@ async function deleteProductById(id: number) {
 }
 
 export default {
+  getCount,
   getProducts,
   getProductsByCategoryId,
   getProductBySlug,

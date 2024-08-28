@@ -9,10 +9,10 @@
       <h1 class="text-zinc-950 text-center font-bold text-5xl"><%= title %></h1>
     </header>
     <main>
-      <div class="max-w-5xl mx-auto flex flex-col gap-6 items-center justify-center md:flex-row md:items-start md:flex-wrap">
+      <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 md:justify-center md:justify-items-center gap-4">
         <% categories.forEach(category => { %>
-          <a href="/category/<%= category.slug %>"> 
-            <div class="bg-white w-80 p-4 rounded-md border border-zinc-950/15">
+          <a href="/category/<%= category.slug %>" class="h-full bg-white w-80 p-4 rounded-md border border-zinc-950/15"> 
+            <div class="flex flex-col gap-2">
               <h2 class=" text-zinc-950 text-center text-mobh3 lg:text-deskh3 font-semibold"><%- category.name %></h2>
               <p class="text-zinc-900"><%- category.description %> </p>
             </div>

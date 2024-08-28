@@ -98,7 +98,10 @@ async function getProductsByCategoryId({
   limit,
   page,
 }: GetProductsByIdPayload) {
-  const offset = (page - 1) * limit;
+  // the ternary is to ensure that if page is 0
+  // to turn it into 1. this prevents a sql error
+  // where offset is negative.
+  const offset = (page === 0 ? 1 : page - 1) * limit;
   const { rows } = await db.query(
     `SELECT
     i.id AS id,

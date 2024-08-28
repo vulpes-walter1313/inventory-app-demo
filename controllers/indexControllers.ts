@@ -44,9 +44,8 @@ export const products_list = [
     let page = parseInt(data.page || "1");
     const totalCount = await Products.getCount();
     const totalPages = Math.ceil(totalCount / limit);
-    if (page > totalPages) {
-      page = totalPages;
-    }
+    if (totalPages > 0 && page > totalPages) page = totalPages;
+    if (totalPages === 0) page = 1;
     // at this point, page and limit are within safe boundries
     const products = await Products.getProducts({ limit, page });
     const totalPagesArr: number[] = [];

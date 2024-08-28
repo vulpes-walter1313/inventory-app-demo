@@ -12,7 +12,7 @@ export const category_create_get = (req: Request, res: Response) => {
 
 // POST /category/create
 export const category_create_post = [
-  body("name").trim().notEmpty().isAlpha().isLength({ min: 4 }).escape(),
+  body("name").trim().notEmpty().isLength({ min: 4 }).escape(),
   body("slug").trim().isSlug().escape().toLowerCase(),
   body("description").optional().notEmpty().trim().escape(),
   asyncHandler(async (req: Request, res: Response) => {
@@ -25,7 +25,7 @@ export const category_create_post = [
       await Category.createCategory(data.name, data.slug, data.description);
       res.redirect(`/category/${data.slug}`);
     } else {
-      console.log(errResult);
+      console.log(errResult, req.body.name);
       res.render("category_form", {
         title: "Create Category",
         errors: errResult,
@@ -63,7 +63,8 @@ export const category_products_list = [
     if (limit > 20) limit = 20;
     const totalCount = await Products.getCount(category.id);
     const totalPages = Math.ceil(totalCount / limit);
-    if (page > totalPages) page = totalPages;
+    if (totalPages > 0 && page > totalPages) page = totalPages;
+    if (totalPages === 0) page = 1;
 
     const products = await Products.getProductsByCategoryId({
       categoryId: category.id,

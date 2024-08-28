@@ -23,9 +23,9 @@ export const product_create_post = [
   body("name").trim().isLength({ max: 140 }).escape(),
   body("description").optional().trim().escape(),
   body("category").isInt().escape(),
-  body("price").trim().isFloat({ gt: 0 }).escape(),
-  body("instock").trim().isInt({ min: 0 }).escape(),
-  body("slug").trim().isSlug().escape(),
+  body("price").trim().isFloat({ gt: 0 }),
+  body("instock").trim().isInt({ min: 0 }),
+  body("slug").trim().isSlug(),
   asyncHandler(async (req: Request, res: Response) => {
     const errResult = validationResult(req);
     const data = matchedData(req);

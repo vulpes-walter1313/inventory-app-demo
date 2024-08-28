@@ -3,7 +3,7 @@ module.exports = {
   content: ["./views/**/*.ejs"],
   theme: {
     fontFamily: {
-      'sans': ['"Open Sans"', 'Helvetica', 'Arial', 'sans-serif']
+      sans: ['"Open Sans"', "Helvetica", "Arial", "sans-serif"],
     },
     extend: {
       fontSize: {

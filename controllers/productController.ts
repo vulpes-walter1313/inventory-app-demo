@@ -8,7 +8,6 @@ import Products from "../models/Products";
 // GET /product/create
 export const product_create_get = asyncHandler(
   async (req: Request, res: Response) => {
-    // const categories = await Category.find({}).exec();
     const categories = await Category.getCategories();
     res.render("product_form", {
       title: "Create A New Product",
@@ -53,7 +52,6 @@ export const product_create_post = [
       return;
     } else {
       // errors in validation
-      // const categories = await Category.find({}).exec();
       const categories = await Category.getCategories();
 
       res.render("product_form", {
@@ -78,7 +76,6 @@ export const product_create_post = [
 export const product_detail = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-
       const product = await Products.getProductBySlug(req.params.productSlug);
       if (product) {
         res.render("product_detail", {
@@ -154,7 +151,6 @@ export const product_edit_post = [
         const price = String(data.price);
         const in_stock = parseInt(data.instock);
         const slug = data.slug;
-        // await product.save();
         await Products.updateProductBySlug(
           { name, description, category_id, price, in_stock, slug },
           req.params.productSlug,
@@ -223,12 +219,10 @@ export const product_delete_post = [
     if (errResult.isEmpty()) {
       // no validation errors
       if (data.password === process.env.EDIT_PASSWORD) {
-
         const productid = parseInt(data.productid);
         await Products.deleteProductById(productid);
         res.redirect("/products");
       } else {
-
         const productid = parseInt(data.productid);
         const product = await Products.getProductById(productid);
         res.render("product_delete", {

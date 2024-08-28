@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import { body, validationResult, matchedData } from "express-validator";
+import { body, validationResult, matchedData, query } from "express-validator";
 import { type Request, type Response, type NextFunction } from "express";
 import HttpError from "../lib/HttpError";
 import Category from "../models/Category";
@@ -40,47 +40,55 @@ export const category_create_post = [
 ];
 
 // GET /category/:categoryName
-export const category_products_list = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    // const category = await Category.findOne({
-    //   slug: req.params.categoryName,
-    // }).exec();
-    // const { rows: categories } = await db.query(
-    //   "SELECT name, slug, description FROM categories WHERE slug = $1",
-    //   [req.params.categoryName],
-    // );
-    // const category = categories[0];
+export const category_products_list = [
+  query("limit").optional().isInt(),
+  query("page").optional().isInt(),
+  asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const valResult = validationResult(req);
+    if (!valResult.isEmpty()) {
+      const error = new HttpError("Validation error", 400);
+      next(error);
+      return;
+    }
+    const data = matchedData(req);
     const category = await Category.getCategoryBySlug(req.params.categoryName);
 
     if (category === undefined) {
       const err = new HttpError("Category not found", 404);
       return next(err);
     }
-    // const {rows: products} = await Instrument.find({ category: category }).exec();
-    // const { rows: products } = await db.query(
-    //   "SELECT id, name, description, category_id, price, in_stock, slug FROM instrument WHERE category_id = $1",
-    //   [category.id],
-    // );
-    const products = await Products.getProductsByCategoryId(category.id);
+    // normalize query params
+    let limit = parseInt(data.limit || "9");
+    let page = parseInt(data.page || "1");
+    if (limit > 20) limit = 20;
+    const totalCount = await Products.getCount(category.id);
+    const totalPages = Math.ceil(totalCount / limit);
+    if (page > totalPages) page = totalPages;
+
+    const products = await Products.getProductsByCategoryId({
+      categoryId: category.id,
+      limit,
+      page,
+    });
+    const totalPagesArr: number[] = [];
+    for (let i = 1; i <= totalPages; i++) {
+      totalPagesArr.push(i);
+    }
+
     res.render("products_list", {
       title: `${category.name}`,
       category: category,
       products: products,
+      totalPages: totalPagesArr,
+      currentPage: page,
+      limit,
     });
-  },
-);
+  }),
+];
 
 // GET /category/:categoryName/edit
 export const category_edit_get = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    // const category = await Category.findOne({
-    //   slug: req.params.categoryName,
-    // }).exec();
-    // const { rows: categories } = await db.query(
-    //   "SELECT id, name, slug, description FROM categories WHERE slug = $1",
-    //   [req.params.categoryName],
-    // );
-    // const category = categories[0];
     const category = await Category.getCategoryBySlug(req.params.categoryName);
 
     if (category === undefined) {
@@ -103,14 +111,6 @@ export const category_edit_post = [
   body("description").optional().notEmpty().trim().escape(),
   body("password").trim().notEmpty(),
   asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    // const category = await Category.findOne({
-    //   slug: req.params.categoryName,
-    // }).exec();
-    // const { rows: categories } = await db.query(
-    //   "SELECT id, name, slug, description FROM categories WHERE slug = $1",
-    //   [req.params.categoryName],
-    // );
-    // const category = categories[0];
     const category = await Category.getCategoryBySlug(req.params.categoryName);
     if (category === undefined) {
       const err = new HttpError("Category Not Found", 404);
@@ -123,10 +123,6 @@ export const category_edit_post = [
     if (errResult.isEmpty()) {
       // no errors
       if (data.password === process.env.EDIT_PASSWORD) {
-        // category.name = data.name;
-        // category.slug = data.slug;
-        // category.description = data.description;
-        // await category.save();
         await Category.updateCategoryById(
           { name: data.name, slug: data.slug, description: data.description },
           category.id,
@@ -161,15 +157,17 @@ export const category_edit_post = [
 // GET /category/:categoryName/delete
 export const category_delete_get = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    // const category = await Category.findOne({ slug: req.params.categoryName });
     const category = await Category.getCategoryBySlug(req.params.categoryName);
 
     if (category === undefined) {
       const err = new HttpError("Category not found", 404);
       return next(err);
     }
-    const products = await Products.getProductsByCategoryId(category.id);
-    // const products = await Instrument.find({ category: category });
+    const products = await Products.getProductsByCategoryId({
+      categoryId: category.id,
+      limit: 9,
+      page: 1,
+    });
 
     if (products.length > 0) {
       res.render("category_delete", {
@@ -196,20 +194,19 @@ export const category_delete_post = [
     const errResult = validationResult(req);
     const data = matchedData(req);
 
-    // const { rows: categories } = await db.query(
-    //   "SELECT * FROM categories WHERE slug = $1",
-    //   [req.params.categoryName],
-    // );
-    // const category = categories[0];
     const category = await Category.getCategoryBySlug(req.params.categoryName);
     if (category === undefined) {
       const err = new HttpError("Category doesn't exist", 500);
       return next(err);
     }
-    // const products = await Instrument.find({ category: category });
+
     if (errResult.isEmpty()) {
       // no errors
-      const products = await Products.getProductsByCategoryId(category.id);
+      const products = await Products.getProductsByCategoryId({
+        categoryId: category.id,
+        limit: 2,
+        page: 1,
+      });
       if (products.length > 0) {
         // There are still products under that category
         res.render("category_delete", {
@@ -221,7 +218,6 @@ export const category_delete_post = [
         // the category exists but there are not products under it.
         if (data.password === process.env.EDIT_PASSWORD) {
           // password is correct
-          // await Category.findByIdAndDelete(data.categoryid).exec();
           await Category.deleteCategoryById(category.id);
           res.redirect("/categories");
         } else {

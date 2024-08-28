@@ -87,7 +87,18 @@ async function getCount(categoryId?: number) {
   }
 }
 
-async function getProductsByCategoryId(categoryId: number) {
+type GetProductsByIdPayload = {
+  limit: number;
+  page: number;
+  categoryId: number;
+};
+
+async function getProductsByCategoryId({
+  categoryId,
+  limit,
+  page,
+}: GetProductsByIdPayload) {
+  const offset = (page - 1) * limit;
   const { rows } = await db.query(
     `SELECT
     i.id AS id,
@@ -103,8 +114,11 @@ async function getProductsByCategoryId(categoryId: number) {
     JOIN categories c
     ON i.category_id = c.id
     WHERE i.category_id = $1
+    ORDER BY i.name
+    OFFSET $2 ROWS
+    FETCH FIRST $3 ROWS ONLY
 `,
-    [categoryId],
+    [categoryId, offset, limit],
   );
   return rows as ProductList;
 }

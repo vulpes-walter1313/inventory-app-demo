@@ -128,7 +128,7 @@ export const category_edit_post = [
           { name: data.name, slug: data.slug, description: data.description },
           category.id,
         );
-        res.redirect(`/category/${category.slug}`);
+        res.redirect(`/category/${data.slug}`);
       } else {
         res.status(400).render("category_form", {
           title: `Edit: ${category.name} Category`,

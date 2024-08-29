@@ -189,7 +189,7 @@ export const category_delete_get = asyncHandler(
 
 // POST /category/:categoryName/delete
 export const category_delete_post = [
-  body("categoryid").trim().isMongoId(),
+  body("categoryid").trim().isInt(),
   body("password").trim().notEmpty(),
   asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const errResult = validationResult(req);

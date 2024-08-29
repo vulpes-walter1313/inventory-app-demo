@@ -13,7 +13,8 @@
     "dev": "DEBUG=inventory-app-demo:* concurrently \"node --watch ./dist/app.js\" \"npm run tailwind:css\" \"npx tsc -w\"",
     "pretty": "prettier . --write",
     "tailwind:css": "postcss -w public/stylesheets/tailwind.css -o public/stylesheets/style.css",
-    "build": "tsc",
+    "tailwind:css:build": "postcss public/stylesheets/tailwind.css -o public/stylesheets/style.css",
+    "build": "tsc && npm run tailwind:css:build && npm run cpp",
     "db:populate": "node -r esbuild-register ./db/populate.ts",
     "cpp": "rsync -avhP --delete ./public/ ./dist/public && rsync -avhP --delete ./views/ ./dist/views",
     "watch-public": "npm-watch cpp"

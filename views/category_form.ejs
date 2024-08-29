@@ -6,7 +6,7 @@
   <body>
     <%- include('partials/navbar') %> 
     <header class="py-10">
-      <h1 class="text-gray-950 text-center font-bold text-5xl"><%= title %></h1>
+      <h1 class="text-zinc-950 text-center"><%= title %></h1>
     </header>
     <main class="max-w-5xl mx-auto flex flex-col p-8 justify-center justify-items-center">
       <% if (locals.errors) {%> 
@@ -26,7 +26,7 @@
             type="text"
             id="name"
             name="name"
-            class="border border-gray-950/25 rounded-sm px-4 py-2"
+            class="border border-zinc-950/25 rounded-md px-4 py-2 bg-zinc-50"
             value="<%= locals.category?.name === undefined ? "" : `${locals.category.name}` %>"
             required
             minlength="4"
@@ -38,7 +38,7 @@
             type="text"
             id="slug"
             name="slug"
-            class="border border-gray-950/25 rounded-sm px-4 py-2"
+            class="border border-zinc-950/25 rounded-md px-4 py-2 bg-zinc-50"
             value="<%= locals.category?.slug === undefined ? "" : `${locals.category.slug}` %>"
             required
           />
@@ -48,7 +48,7 @@
           <textarea
             id="description"
             name="description"
-            class="border border-gray-950/25 rounded-sm px-4 py-2 h-32"
+            class="border border-zinc-950/25 rounded-md px-4 py-2 h-32 bg-zinc-50"
             ><%- locals.category?.description === undefined ? "" : `${locals.category.description}` %></textarea>
         </div>
         <% if (locals.showPassword) { %>
@@ -60,10 +60,10 @@
             <input type="password"
               name="password"
               id="password"
-              class="px-4 py-2 border border-gray-950/25">
+              class="px-4 py-2 border border-zinc-950/25">
           </div>
         <% }%>
-        <button type="submit" class="bg-gray-950 text-gray-50 px-4 py-2 self-start rounded-md">Submit</button>
+        <button type="submit" class="px-6 py-2 bg-emerald-700 text-white font-semibold text-xl rounded-lg hover:scale-105">Submit</button>
       </form>
     </main>
   </body>

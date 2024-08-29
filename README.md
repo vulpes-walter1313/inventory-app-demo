@@ -43,6 +43,14 @@ CREATE TABLE IF NOT EXISTS categories (
 );
 ```
 
+## Populating the db initially
+
+There is a script you can run from package.json. Run the following command to initialize with dummy data. You can also edit the `db/populate.ts file to change the initial data.
+
+```Bash
+npm run db:populate <postgres url here>
+```
+
 ## Routes
 
 ### GET `/` Homepage

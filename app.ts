@@ -13,6 +13,7 @@ import "dotenv/config";
 import indexRouter from "./routes/index";
 import categoryRouter from "./routes/category";
 import productsRouter from "./routes/products";
+import apiRouter from "./routes/api";
 import compression from "compression";
 import helmet from "helmet";
 import HttpError from "./lib/HttpError";
@@ -23,7 +24,16 @@ const app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        scriptSrc: ["'self'"],
+        defaultSrc: ["'self'"],
+      },
+    },
+  }),
+);
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -43,6 +53,7 @@ if (process.env.NODE_ENV === "production") {
 app.use("/", indexRouter);
 app.use("/category", categoryRouter);
 app.use("/product", productsRouter);
+app.use("/api", apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

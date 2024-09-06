@@ -4,14 +4,17 @@
   "private": true,
   "watch": {
     "cpp": {
-      "patterns": ["public", "views"],
+      "patterns": [
+        "public",
+        "views"
+      ],
       "extensions": "ejs,css"
     }
   },
   "scripts": {
     "start": "NODE_ENV=production DEBUG=inventory-app-demo:* node ./dist/app.js",
     "dev": "DEBUG=inventory-app-demo:* concurrently \"node --watch ./dist/app.js\" \"npm run tailwind:css\" \"npx tsc -w\"",
-    "pretty": "prettier . --write",
+    "prettier": "prettier . --write",
     "tailwind:css": "postcss -w public/stylesheets/tailwind.css -o public/stylesheets/style.css",
     "tailwind:css:build": "postcss public/stylesheets/tailwind.css -o public/stylesheets/style.css",
     "build": "tsc && npm run tailwind:css:build && npm run cpp",
